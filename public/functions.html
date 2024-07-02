@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenAI Chat Demos: Functions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+
+        body {
+            font-family: Poppins;
+            padding: 10px;
+        }
+
+
+        .conversant {
+            margin-top: -1.3em;
+            margin-left: 10px;
+            background-color: #dddddd;
+            display: block;
+            width:16px;
+            padding:4px;
+            border:solid #CCC 1px;
+            border-radius: 6px;
+        }
+
+        .name {
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<h1>OpenAI Node API Demos: Functions</h1>
+If you use this API, you provide functions (sometimes called tools) that OpenAI
+invokes based on the user's chat text.
+
+Here OpenAI is connecting to one of three functions returning only JSON keywords.
+You can use this to extract key concepts from chat text.
+You could then create a formal query and call a database function,
+showing those results.</p>
+
+<h3>This Demo</h3>
+Here are the different options in this example. <i> If you're familar with conversational intents, this is similar.</i>
+
+Try these examples.
+<li> "Good morning." "Hello my name is jenny"
+<li> "Find diamonds", "what is graphite? "
+<li> " I am angry",  "this is amazing. I am in awe"
+
+    <div class="rightBubble">
+        <textarea id="input-text" placeholder="Question / Prompt Here"></textarea>
+    </div>
+
+
+    <p>
+        <button id="send-button">Send</button>
+    </p>
+
+
+    <div class="input-output-container leftBubble">
+        <p class="conversant">AI</p>
+        <div id="output-text" class="outputText">..</div>
+    </div>
+    </div>
+
+    <script>
+        const inputText = document.getElementById('input-text');
+        const sendButton = document.getElementById('send-button');
+
+        sendButton.addEventListener('click', async () => {
+            let userInput = inputText.value.trim();
+
+            try {
+                const response = await fetch('/apps/openai-funcs', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({userInput}), // Send user input to the server
+                });
+
+
+                const results = await response.json();
+
+                const outputText = document.querySelector(".outputText");
+                outputText.style.visibility = "visible"
+                //outputText.textContent = results
+
+                outputText.textContent = JSON.stringify(results) //JSON.parse(results);//.choices[0].message.content; // Display the chat completion
+
+
+               } catch (error) {
+                console.log(error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    </script>
+</body>
